@@ -17,8 +17,14 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 196 97% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 196 97% 65%;
+    
+    --brand: 196 97% 48%;
+    --brand-foreground: 0 0% 100%;
+    --brand-light: 196 97% 65%;
+    --brand-dark: 196 97% 35%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -65,8 +71,14 @@ All colors MUST be HSL.
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 196 97% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 196 97% 65%;
+    
+    --brand: 196 97% 48%;
+    --brand-foreground: 0 0% 100%;
+    --brand-light: 196 97% 65%;
+    --brand-dark: 196 97% 35%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -91,6 +103,16 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Custom gradients and animations */
+    --gradient-brand: linear-gradient(135deg, hsl(var(--brand)), hsl(var(--brand-light)));
+    --gradient-recording: linear-gradient(45deg, hsl(var(--brand)), hsl(var(--primary-glow)));
+    --shadow-brand: 0 4px 20px hsl(var(--brand) / 0.25);
+    --shadow-glow: 0 0 30px hsl(var(--brand) / 0.3);
+    
+    /* Animation variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 }
 
