@@ -28,24 +28,24 @@ interface AudioVisualizerProps {
 }
 
 const AudioVisualizer = ({ isRecording, audioLevel }: AudioVisualizerProps) => {
-  const bars = Array.from({ length: 25 }, (_, i) => i);
+  const bars = Array.from({ length: 20 }, (_, i) => i);
   
   return (
-    <div className="flex items-end justify-center space-x-1 h-12 p-2 bg-gradient-to-t from-brand/20 to-transparent rounded-lg">
+    <div className="flex items-end justify-center space-x-0.5 h-6 p-1 bg-gradient-to-t from-brand/30 to-transparent rounded">
       {bars.map((bar) => (
         <div
           key={bar}
           className={cn(
-            "w-1 rounded-full transition-all duration-150",
+            "w-0.5 rounded-full transition-all duration-150",
             isRecording 
               ? "bg-gradient-to-t from-brand to-brand-light animate-pulse-brand" 
               : "bg-muted"
           )}
           style={{
             height: isRecording 
-              ? `${Math.max(4, Math.random() * audioLevel + 8)}px`
-              : '4px',
-            animationDelay: `${bar * 30}ms`
+              ? `${Math.max(3, Math.random() * audioLevel + 6)}px`
+              : '3px',
+            animationDelay: `${bar * 25}ms`
           }}
         />
       ))}
@@ -138,7 +138,7 @@ const CameraFeed = ({
       </div>
 
       {/* Candidate Info Overlay */}
-      <div className="absolute bottom-4 left-4 right-4">
+      <div className="absolute bottom-4 left-4">
         <div className="bg-black/60 backdrop-blur-md rounded-xl p-4 shadow-xl border border-white/10">
           <div className="flex items-center space-x-3">
             <div className="flex-shrink-0">
@@ -157,18 +157,18 @@ const CameraFeed = ({
         </div>
       </div>
 
-      {/* Answer Overlay - Compact */}
-      <div className="absolute top-4 right-4 w-80">
-        <div className="bg-black/70 backdrop-blur-md rounded-xl p-4 shadow-xl border border-white/10">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-white font-semibold text-sm">Your Answer</h3>
+      {/* Answer Overlay - Bottom Right, More Transparent */}
+      <div className="absolute bottom-4 right-4 w-72">
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-white/10">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-white font-medium text-sm">Your Answer</h3>
             {currentQuestion.type === 'vocal' ? (
-              <Badge className="bg-green-500/90 text-white text-xs">
+              <Badge className="bg-green-500/80 text-white text-xs">
                 <Mic className="w-2 h-2 mr-1" />
                 Vocal
               </Badge>
             ) : (
-              <Badge className="bg-blue-500/90 text-white text-xs">
+              <Badge className="bg-blue-500/80 text-white text-xs">
                 <Type className="w-2 h-2 mr-1" />
                 Typed
               </Badge>
@@ -176,14 +176,14 @@ const CameraFeed = ({
           </div>
           
           {currentQuestion.type === 'vocal' ? (
-            <div className="space-y-3">
-              <div className="h-8">
+            <div className="space-y-2">
+              <div className="h-6">
                 <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
               </div>
               <div className="text-center">
                 {isRecording ? (
                   <div className="flex items-center justify-center space-x-2">
-                    <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+                    <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
                     <span className="text-xs font-medium text-red-400">Recording...</span>
                   </div>
                 ) : timerActive ? (
@@ -199,7 +199,7 @@ const CameraFeed = ({
                 placeholder="Type your answer here..."
                 value={typedAnswer}
                 onChange={(e) => setTypedAnswer(e.target.value)}
-                className="h-20 resize-none text-xs bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40 focus:ring-white/20"
+                className="h-16 resize-none text-xs bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40 focus:ring-white/20"
                 disabled={isNarrating}
               />
               <div className="flex justify-between items-center text-xs text-white/60">
