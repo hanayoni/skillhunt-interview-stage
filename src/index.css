@@ -104,15 +104,24 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
     
-    /* Custom gradients and animations */
+    /* Enhanced gradients and effects */
     --gradient-brand: linear-gradient(135deg, hsl(var(--brand)), hsl(var(--brand-light)));
     --gradient-recording: linear-gradient(45deg, hsl(var(--brand)), hsl(var(--primary-glow)));
-    --shadow-brand: 0 4px 20px hsl(var(--brand) / 0.25);
-    --shadow-glow: 0 0 30px hsl(var(--brand) / 0.3);
+    --gradient-surface: linear-gradient(145deg, hsl(var(--card)), hsl(var(--muted)));
+    --gradient-accent: linear-gradient(90deg, hsl(var(--brand) / 0.1), hsl(var(--brand) / 0.05));
+    --shadow-brand: 0 8px 32px hsl(var(--brand) / 0.3);
+    --shadow-card: 0 4px 24px hsl(var(--foreground) / 0.08);
+    --shadow-glow: 0 0 40px hsl(var(--brand) / 0.4);
+    --shadow-intense: 0 12px 48px hsl(var(--brand) / 0.35);
+    
+    /* Glass morphism effects */
+    --glass-bg: hsl(var(--background) / 0.8);
+    --glass-border: hsl(var(--border) / 0.2);
     
     /* Animation variables */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
