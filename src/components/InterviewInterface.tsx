@@ -59,9 +59,27 @@ interface CameraFeedProps {
   isActive: boolean;
   candidateName: string;
   position: string;
+  currentQuestion: Question;
+  isRecording: boolean;
+  isNarrating: boolean;
+  typedAnswer: string;
+  setTypedAnswer: (value: string) => void;
+  audioLevel: number;
+  timerActive: boolean;
 }
 
-const CameraFeed = ({ isActive, candidateName, position }: CameraFeedProps) => {
+const CameraFeed = ({ 
+  isActive, 
+  candidateName, 
+  position, 
+  currentQuestion,
+  isRecording,
+  isNarrating,
+  typedAnswer,
+  setTypedAnswer,
+  audioLevel,
+  timerActive
+}: CameraFeedProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
@@ -136,6 +154,60 @@ const CameraFeed = ({ isActive, candidateName, position }: CameraFeedProps) => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Answer Overlay - Compact */}
+      <div className="absolute top-4 right-4 w-80">
+        <div className="bg-black/70 backdrop-blur-md rounded-xl p-4 shadow-xl border border-white/10">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-white font-semibold text-sm">Your Answer</h3>
+            {currentQuestion.type === 'vocal' ? (
+              <Badge className="bg-green-500/90 text-white text-xs">
+                <Mic className="w-2 h-2 mr-1" />
+                Vocal
+              </Badge>
+            ) : (
+              <Badge className="bg-blue-500/90 text-white text-xs">
+                <Type className="w-2 h-2 mr-1" />
+                Typed
+              </Badge>
+            )}
+          </div>
+          
+          {currentQuestion.type === 'vocal' ? (
+            <div className="space-y-3">
+              <div className="h-8">
+                <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
+              </div>
+              <div className="text-center">
+                {isRecording ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+                    <span className="text-xs font-medium text-red-400">Recording...</span>
+                  </div>
+                ) : timerActive ? (
+                  <span className="text-xs text-white/70">Ready to record</span>
+                ) : (
+                  <span className="text-xs text-white/70">Waiting for narration</span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Textarea
+                placeholder="Type your answer here..."
+                value={typedAnswer}
+                onChange={(e) => setTypedAnswer(e.target.value)}
+                className="h-20 resize-none text-xs bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40 focus:ring-white/20"
+                disabled={isNarrating}
+              />
+              <div className="flex justify-between items-center text-xs text-white/60">
+                <span>{typedAnswer.length} chars</span>
+                <span>{typedAnswer.split(/\s+/).filter(word => word.length > 0).length} words</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -361,14 +433,21 @@ export default function InterviewInterface() {
                   isActive={true} 
                   candidateName={interviewData.candidateName}
                   position={interviewData.position}
+                  currentQuestion={currentQuestion}
+                  isRecording={isRecording}
+                  isNarrating={isNarrating}
+                  typedAnswer={typedAnswer}
+                  setTypedAnswer={setTypedAnswer}
+                  audioLevel={audioLevel}
+                  timerActive={timerActive}
                 />
               </div>
             </div>
           </Card>
         </div>
 
-        {/* Right Panel - Fixed height with scrollable content */}
-        <div className="flex flex-col space-y-3 min-h-0">
+        {/* Right Panel - More space for questions */}
+        <div className="flex flex-col space-y-4 min-h-0">
           {/* Timer - Compact */}
           <div className="flex-shrink-0">
             <div className={cn(
@@ -397,11 +476,11 @@ export default function InterviewInterface() {
             </div>
           </div>
 
-          {/* Question Card - Flexible height */}
+          {/* Question Card - More space available */}
           <Card className="flex-1 shadow-xl border-0 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm flex flex-col min-h-0">
             <div className="px-4 py-3 bg-gradient-to-r from-brand/10 to-brand-light/5 border-b border-brand/10 flex-shrink-0">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold text-foreground">Question</h2>
+                <h2 className="text-lg font-bold text-foreground">Current Question</h2>
                 <div className="flex items-center space-x-2">
                   {currentQuestion.type === 'vocal' ? (
                     <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-xs">
@@ -418,19 +497,21 @@ export default function InterviewInterface() {
               </div>
             </div>
             
-            <div className="flex-1 p-4 flex flex-col min-h-0">
-              <div className="flex-1 p-3 bg-gradient-to-br from-muted/50 to-muted/30 rounded-lg border border-brand/10 mb-3 overflow-y-auto">
-                <div className="flex items-center justify-between mb-2">
-                  <Badge variant="secondary" className="bg-brand/10 text-brand border-brand/20 text-xs">
+            <div className="flex-1 p-6 flex flex-col min-h-0">
+              <div className="flex-1 p-4 bg-gradient-to-br from-muted/50 to-muted/30 rounded-lg border border-brand/10 mb-4 overflow-y-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <Badge variant="secondary" className="bg-brand/10 text-brand border-brand/20 text-sm">
                     {currentQuestion.category}
                   </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {Math.ceil(currentQuestion.timeLimit / 60)}min
+                  <span className="text-sm text-muted-foreground">
+                    {Math.ceil(currentQuestion.timeLimit / 60)} min limit
                   </span>
                 </div>
-                <p className="text-foreground leading-relaxed text-xs">
-                  {currentQuestion.text}
-                </p>
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-foreground leading-relaxed text-sm">
+                    {currentQuestion.text}
+                  </p>
+                </div>
               </div>
               
               <Button
@@ -438,71 +519,34 @@ export default function InterviewInterface() {
                 size="sm"
                 onClick={() => speakQuestion(currentQuestion.text)}
                 disabled={isNarrating || timerActive}
-                className="flex-shrink-0 h-8 text-xs bg-gradient-to-r from-background to-muted/50 border-brand/30 hover:border-brand/50"
+                className="flex-shrink-0 h-10 bg-gradient-to-r from-background to-muted/50 border-brand/30 hover:border-brand/50"
               >
-                <Volume2 className="w-3 h-3 mr-1" />
-                {isNarrating ? 'Speaking...' : 'Repeat'}
+                <Volume2 className="w-4 h-4 mr-2" />
+                {isNarrating ? 'Speaking Question...' : 'Repeat Question'}
               </Button>
             </div>
           </Card>
 
-          {/* Answer Interface - Flexible height */}
-          <Card className="flex-1 shadow-xl border-0 bg-gradient-to-br from-card to-card/80 backdrop-blur-sm flex flex-col min-h-0">
-            <div className="px-4 py-2 bg-gradient-to-r from-brand/5 to-brand-light/5 border-b border-brand/10 flex-shrink-0">
-              <h3 className="text-sm font-bold text-foreground">Answer</h3>
-            </div>
-            
-            <div className="flex-1 p-4 min-h-0">
-              {currentQuestion.type === 'vocal' ? (
-                <div className="h-full flex flex-col justify-center space-y-3">
-                  <div className="flex-1 min-h-0">
-                    <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
-                  </div>
-                  <div className="text-center flex-shrink-0">
-                    {isRecording ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                        <span className="text-xs font-medium text-red-600">Recording...</span>
-                      </div>
-                    ) : timerActive ? (
-                      <span className="text-xs text-muted-foreground">Ready to record</span>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">Waiting for narration</span>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="h-full flex flex-col space-y-2">
-                  <Textarea
-                    placeholder="Type your answer here..."
-                    value={typedAnswer}
-                    onChange={(e) => setTypedAnswer(e.target.value)}
-                    className="flex-1 resize-none text-xs leading-relaxed bg-gradient-to-br from-background to-muted/30 border-brand/20 focus:border-brand/40 focus:ring-brand/20"
-                    disabled={isNarrating}
-                  />
-                  <div className="flex justify-between items-center text-xs text-muted-foreground">
-                    <span>{typedAnswer.length} chars</span>
-                    <span>{typedAnswer.split(/\s+/).filter(word => word.length > 0).length} words</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-
-          {/* Navigation - Fixed at bottom */}
-          <div className="flex-shrink-0">
+          {/* Navigation - More space */}
+          <div className="flex-shrink-0 space-y-3">
             <Button
               onClick={handleNextQuestion}
               disabled={!canProceed() || currentQuestionIndex >= totalQuestions - 1}
-              className="w-full h-10 text-sm font-semibold bg-gradient-to-r from-brand to-brand-light hover:from-brand-dark hover:to-brand shadow-brand hover:shadow-intense transition-all duration-300"
+              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-brand to-brand-light hover:from-brand-dark hover:to-brand shadow-brand hover:shadow-intense transition-all duration-300"
             >
               <SkipForward className="w-4 h-4 mr-2" />
-              {currentQuestionIndex >= totalQuestions - 1 ? 'Complete' : 'Next Question'}
+              {currentQuestionIndex >= totalQuestions - 1 ? 'Complete Interview' : 'Next Question'}
             </Button>
             
             {isNarrating && (
-              <p className="text-xs text-muted-foreground text-center mt-1 animate-pulse">
+              <p className="text-xs text-muted-foreground text-center animate-pulse">
                 Please wait for question to finish...
+              </p>
+            )}
+            
+            {timerActive && currentQuestion.type === 'vocal' && (
+              <p className="text-xs text-green-600 text-center animate-bounce-subtle">
+                Recording automatically started - speak your answer now
               </p>
             )}
           </div>
