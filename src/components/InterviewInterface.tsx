@@ -416,7 +416,7 @@ export default function InterviewInterface() {
       </div>
 
       {/* Main Content - Flex layout to fill remaining space */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 py-3 grid grid-cols-1 lg:grid-cols-3 gap-3 min-h-0">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0">
         {/* Camera Feed */}
         <div className="lg:col-span-2 min-h-0">
           <Card className="h-full p-0 overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30 flex flex-col">
@@ -449,7 +449,7 @@ export default function InterviewInterface() {
         </div>
 
         {/* Right Panel - More space for questions */}
-        <div className="flex flex-col space-y-3 min-h-0">
+        <div className="flex flex-col space-y-6 min-h-0">
           {/* Timer - Compact */}
           <div className="flex-shrink-0">
             <div className={cn(
