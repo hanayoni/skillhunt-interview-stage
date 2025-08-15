@@ -415,150 +415,174 @@ export default function InterviewInterface() {
         </div>
       </div>
 
-      {/* Main Content - Flex layout to fill remaining space */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0">
-        {/* Camera Feed */}
-        <div className="lg:col-span-2 min-h-0">
-          <Card className="h-full p-0 overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30 flex flex-col">
-            <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15 flex-shrink-0">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-foreground">Video Feed</h2>
-                <Badge variant="outline" className="bg-gradient-to-r from-green-500/20 to-green-400/15 border-green-500/40 text-green-700 text-xs">
-                  <Camera className="w-2 h-2 mr-1" />
-                  Live
-                </Badge>
+      {/* Main Content - New Layout */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 flex flex-col gap-6 min-h-0">
+        {/* Top Section - Timer */}
+        <div className="flex-shrink-0">
+          <div className={cn(
+            "bg-gradient-to-br from-card/80 to-muted/40 border border-brand/20 rounded-xl p-4 shadow-lg transition-all duration-300",
+            timeLeft <= 30 && timerActive && "border-destructive/60 bg-gradient-to-br from-destructive/10 to-destructive/5 animate-timer-pulse"
+          )}>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <Clock className={cn(
+                  "w-5 h-5",
+                  timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
+                )} />
+                <span className="text-base font-semibold text-foreground">Time Remaining</span>
+              </div>
+              <div className={cn(
+                "text-2xl font-bold tabular-nums",
+                timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
+              )}>
+                {formatTime(timeLeft)}
               </div>
             </div>
-            <div className="flex-1 p-3 min-h-0">
-              <div className="h-full w-full">
-                <CameraFeed 
-                  isActive={true} 
-                  candidateName={interviewData.candidateName}
-                  position={interviewData.position}
-                  currentQuestion={currentQuestion}
-                  isRecording={isRecording}
-                  isNarrating={isNarrating}
-                  typedAnswer={typedAnswer}
-                  setTypedAnswer={setTypedAnswer}
-                  audioLevel={audioLevel}
-                  timerActive={timerActive}
+            <div className="relative">
+              <div className="h-3 bg-gradient-to-r from-muted/60 to-muted/40 rounded-full overflow-hidden">
+                <div 
+                  className={cn(
+                    "h-full transition-all duration-1000 ease-out rounded-full",
+                    timeLeft <= 30 && timerActive 
+                      ? "bg-gradient-to-r from-destructive via-destructive/80 to-destructive animate-pulse" 
+                      : "bg-gradient-to-r from-brand via-brand-light to-brand"
+                  )}
+                  style={{ width: `${((currentQuestion.timeLimit - timeLeft) / currentQuestion.timeLimit) * 100}%` }}
                 />
               </div>
             </div>
-          </Card>
+          </div>
         </div>
 
-        {/* Right Panel - More space for questions */}
-        <div className="flex flex-col space-y-6 min-h-0">
-          {/* Timer - Compact */}
-          <div className="flex-shrink-0">
-            <div className={cn(
-              "bg-gradient-to-br from-card/80 to-muted/40 border border-brand/20 rounded-xl p-3 shadow-lg transition-all duration-300",
-              timeLeft <= 30 && timerActive && "border-destructive/60 bg-gradient-to-br from-destructive/10 to-destructive/5 animate-timer-pulse"
-            )}>
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <Clock className={cn(
-                    "w-4 h-4",
-                    timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
-                  )} />
-                  <span className="text-sm font-semibold text-foreground">Time</span>
-                </div>
-                <div className={cn(
-                  "text-xl font-bold tabular-nums",
-                  timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
-                )}>
-                  {formatTime(timeLeft)}
-                </div>
-              </div>
-              <div className="relative">
-                <div className="h-2 bg-gradient-to-r from-muted/60 to-muted/40 rounded-full overflow-hidden">
-                  <div 
-                    className={cn(
-                      "h-full transition-all duration-1000 ease-out rounded-full",
-                      timeLeft <= 30 && timerActive 
-                        ? "bg-gradient-to-r from-destructive via-destructive/80 to-destructive animate-pulse" 
-                        : "bg-gradient-to-r from-brand via-brand-light to-brand"
-                    )}
-                    style={{ width: `${((currentQuestion.timeLimit - timeLeft) / currentQuestion.timeLimit) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Question Card - More space available */}
-          <Card className="flex-1 shadow-xl border border-brand/15 bg-gradient-to-br from-card/95 to-muted/50 backdrop-blur-sm flex flex-col min-h-0">
-            <div className="px-3 py-2 bg-gradient-to-r from-brand/15 to-brand-light/10 border-b border-brand/20 flex-shrink-0">
+        {/* Middle Section - Question (Prominent Display) */}
+        <div className="flex-1 min-h-0">
+          <Card className="h-full shadow-xl border border-brand/15 bg-gradient-to-br from-card/95 to-muted/50 backdrop-blur-sm flex flex-col">
+            <div className="px-6 py-4 bg-gradient-to-r from-brand/15 to-brand-light/10 border-b border-brand/20 flex-shrink-0">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold text-foreground">Current Question</h2>
-                <div className="flex items-center space-x-2">
+                <h2 className="text-xl font-bold text-foreground">Current Question</h2>
+                <div className="flex items-center space-x-3">
+                  <Badge variant="secondary" className="bg-gradient-to-r from-brand/20 to-brand-light/15 text-brand border-brand/30 text-sm font-medium">
+                    {currentQuestion.category}
+                  </Badge>
                   {currentQuestion.type === 'vocal' ? (
-                    <Badge className="bg-gradient-to-r from-green-500/90 to-green-600/90 text-white text-xs shadow-sm">
-                      <Mic className="w-2 h-2 mr-1" />
-                      Vocal
+                    <Badge className="bg-gradient-to-r from-green-500/90 to-green-600/90 text-white text-sm shadow-sm">
+                      <Mic className="w-3 h-3 mr-1" />
+                      Vocal Answer
                     </Badge>
                   ) : (
-                    <Badge className="bg-gradient-to-r from-blue-500/90 to-blue-600/90 text-white text-xs shadow-sm">
-                      <Type className="w-2 h-2 mr-1" />
-                      Typed
+                    <Badge className="bg-gradient-to-r from-blue-500/90 to-blue-600/90 text-white text-sm shadow-sm">
+                      <Type className="w-3 h-3 mr-1" />
+                      Typed Answer
                     </Badge>
                   )}
                 </div>
               </div>
             </div>
             
-            <div className="flex-1 p-4 flex flex-col min-h-0">
-              <div className="flex-1 p-4 bg-gradient-to-br from-background/80 to-muted/40 rounded-xl border border-brand/15 mb-3 overflow-y-auto">
-                <div className="flex items-center justify-between mb-3">
-                  <Badge variant="secondary" className="bg-gradient-to-r from-brand/20 to-brand-light/15 text-brand border-brand/30 text-sm font-medium">
-                    {currentQuestion.category}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {Math.ceil(currentQuestion.timeLimit / 60)} min limit
-                  </span>
-                </div>
-                <div className="prose prose-sm max-w-none">
-                  <p className="text-foreground leading-relaxed text-sm font-medium">
+            <div className="flex-1 p-6 flex flex-col min-h-0">
+              <div className="flex-1 p-6 bg-gradient-to-br from-background/80 to-muted/40 rounded-xl border border-brand/15 mb-6 overflow-y-auto">
+                <div className="prose prose-lg max-w-none">
+                  <p className="text-foreground leading-relaxed text-lg font-medium">
                     {currentQuestion.text}
                   </p>
                 </div>
               </div>
               
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => speakQuestion(currentQuestion.text)}
-                disabled={isNarrating || timerActive}
-                className="flex-shrink-0 h-9 bg-gradient-to-r from-background/90 to-muted/60 border-brand/40 hover:border-brand/60 hover:bg-gradient-to-r hover:from-brand/5 hover:to-brand-light/5"
-              >
-                <Volume2 className="w-3 h-3 mr-2" />
-                {isNarrating ? 'Speaking Question...' : 'Repeat Question'}
-              </Button>
+              {/* Answer Section */}
+              {currentQuestion.type === 'typed' && (
+                <div className="flex-shrink-0 mb-6">
+                  <div className="bg-gradient-to-br from-background/60 to-muted/30 rounded-xl border border-brand/10 p-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3">Your Answer</h3>
+                    <Textarea
+                      placeholder="Type your detailed answer here..."
+                      value={typedAnswer}
+                      onChange={(e) => setTypedAnswer(e.target.value)}
+                      className="min-h-32 resize-none text-base bg-background/80 border-brand/20 focus:border-brand/40 focus:ring-brand/20"
+                      disabled={isNarrating}
+                    />
+                    <div className="flex justify-between items-center text-sm text-muted-foreground mt-2">
+                      <span>{typedAnswer.length} characters</span>
+                      <span>{typedAnswer.split(/\s+/).filter(word => word.length > 0).length} words</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => speakQuestion(currentQuestion.text)}
+                  disabled={isNarrating || timerActive}
+                  className="flex-shrink-0 h-11 bg-gradient-to-r from-background/90 to-muted/60 border-brand/40 hover:border-brand/60 hover:bg-gradient-to-r hover:from-brand/5 hover:to-brand-light/5"
+                >
+                  <Volume2 className="w-4 h-4 mr-2" />
+                  {isNarrating ? 'Speaking Question...' : 'Repeat Question'}
+                </Button>
+                
+                <Button
+                  onClick={handleNextQuestion}
+                  disabled={!canProceed() || currentQuestionIndex >= totalQuestions - 1}
+                  className="flex-1 h-11 text-base font-bold bg-gradient-to-r from-brand via-brand-light to-brand hover:from-brand-dark hover:via-brand hover:to-brand-light shadow-lg hover:shadow-xl transition-all duration-300 border border-brand/20"
+                >
+                  <SkipForward className="w-4 h-4 mr-2" />
+                  {currentQuestionIndex >= totalQuestions - 1 ? 'Complete Interview' : 'Next Question'}
+                </Button>
+              </div>
             </div>
           </Card>
+        </div>
 
-          {/* Navigation - More space */}
-          <div className="flex-shrink-0 space-y-2">
-            <Button
-              onClick={handleNextQuestion}
-              disabled={!canProceed() || currentQuestionIndex >= totalQuestions - 1}
-              className="w-full h-11 text-sm font-bold bg-gradient-to-r from-brand via-brand-light to-brand hover:from-brand-dark hover:via-brand hover:to-brand-light shadow-lg hover:shadow-xl transition-all duration-300 border border-brand/20"
-            >
-              <SkipForward className="w-4 h-4 mr-2" />
-              {currentQuestionIndex >= totalQuestions - 1 ? 'Complete Interview' : 'Next Question'}
-            </Button>
-            
+        {/* Bottom Section - Video Feed (Bottom Left) */}
+        <div className="flex-shrink-0 flex justify-between items-end gap-6">
+          <div className="w-80 h-60">
+            <Card className="h-full p-0 overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30">
+              <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-foreground">Video Feed</h3>
+                  <Badge variant="outline" className="bg-gradient-to-r from-green-500/20 to-green-400/15 border-green-500/40 text-green-700 text-xs">
+                    <Camera className="w-2 h-2 mr-1" />
+                    Live
+                  </Badge>
+                </div>
+              </div>
+              <div className="flex-1 p-2">
+                <div className="h-full w-full">
+                  <CameraFeed 
+                    isActive={true} 
+                    candidateName={interviewData.candidateName}
+                    position={interviewData.position}
+                    currentQuestion={currentQuestion}
+                    isRecording={isRecording}
+                    isNarrating={isNarrating}
+                    typedAnswer={typedAnswer}
+                    setTypedAnswer={setTypedAnswer}
+                    audioLevel={audioLevel}
+                    timerActive={timerActive}
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+          
+          {/* Status Messages */}
+          <div className="flex-1 text-right space-y-2">
             {isNarrating && (
-              <p className="text-xs text-muted-foreground text-center animate-pulse font-medium">
+              <p className="text-sm text-muted-foreground animate-pulse font-medium">
                 Please wait for question to finish...
               </p>
             )}
             
             {timerActive && currentQuestion.type === 'vocal' && (
-              <p className="text-xs text-green-600 text-center animate-bounce-subtle font-medium">
+              <p className="text-sm text-green-600 animate-bounce-subtle font-medium">
                 Recording automatically started - speak your answer now
               </p>
+            )}
+            
+            {currentQuestion.type === 'vocal' && isRecording && (
+              <div className="flex items-center justify-end space-x-2">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-sm font-medium text-red-500">Recording in progress...</span>
+              </div>
             )}
           </div>
         </div>
