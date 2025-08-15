@@ -157,38 +157,6 @@ const CameraFeed = ({
         </div>
       </div>
 
-      {/* Recording Status Overlay - Bottom Right */}
-      {currentQuestion.type === 'vocal' && (
-        <div className="absolute bottom-4 right-4 w-64">
-          <div className="bg-black/60 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-white/10">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-white font-medium text-sm">Recording Status</h3>
-              <Badge className="bg-green-500/80 text-white text-xs">
-                <Mic className="w-2 h-2 mr-1" />
-                Vocal
-              </Badge>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="h-6">
-                <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
-              </div>
-              <div className="text-center">
-                {isRecording ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse" />
-                    <span className="text-xs font-medium text-red-400">Recording...</span>
-                  </div>
-                ) : timerActive ? (
-                  <span className="text-xs text-white/70">Ready to record</span>
-                ) : (
-                  <span className="text-xs text-white/70">Waiting for narration</span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Decorative Border */}
       <div className="absolute inset-0 rounded-xl border-2 border-brand/20 pointer-events-none" />
@@ -394,11 +362,11 @@ export default function InterviewInterface() {
         </div>
       </div>
 
-      {/* Main Content - New Layout */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 flex gap-6 min-h-0">
+      {/* Main Content - Fixed Layout */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 flex gap-6 min-h-0 overflow-hidden">
         {/* Left Side - Question (Prominent Display) */}
-        <div className="flex-1 min-h-0 flex flex-col gap-6">
-          <Card className="flex-1 shadow-xl border border-brand/15 bg-gradient-to-br from-card/95 to-muted/50 backdrop-blur-sm flex flex-col">
+        <div className="flex-1 min-h-0 flex flex-col gap-6 overflow-hidden">
+          <Card className="flex-1 shadow-xl border border-brand/15 bg-gradient-to-br from-card/95 to-muted/50 backdrop-blur-sm flex flex-col min-h-0">
             <div className="px-6 py-4 bg-gradient-to-r from-brand/15 to-brand-light/10 border-b border-brand/20 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-foreground">Current Question</h2>
@@ -421,39 +389,42 @@ export default function InterviewInterface() {
               </div>
             </div>
             
-            <div className="flex-1 p-6 flex flex-col min-h-0 gap-6">
-              {/* Question Text */}
-              <div className="flex-1 p-6 bg-gradient-to-br from-background/80 to-muted/40 rounded-xl border border-brand/15 overflow-y-auto">
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-foreground leading-relaxed text-lg font-medium">
-                    {currentQuestion.text}
-                  </p>
-                </div>
-              </div>
-              
-              {/* Answer Section for Typed Questions */}
-              {currentQuestion.type === 'typed' && (
-                <div className="flex-shrink-0">
-                  <div className="bg-gradient-to-br from-background/60 to-muted/30 rounded-xl border border-brand/10 p-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-3">Your Answer</h3>
-                    <Textarea
-                      placeholder="Type your detailed answer here..."
-                      value={typedAnswer}
-                      onChange={(e) => setTypedAnswer(e.target.value)}
-                      className="min-h-32 resize-none text-base bg-background/80 border-brand/20 focus:border-brand/40 focus:ring-brand/20"
-                      disabled={isNarrating}
-                    />
-                    <div className="flex justify-between items-center text-sm text-muted-foreground mt-2">
-                      <span>{typedAnswer.length} characters</span>
-                      <span>{typedAnswer.split(/\s+/).filter(word => word.length > 0).length} words</span>
-                    </div>
+            {/* Scrollable Content Area */}
+            <div className="flex-1 min-h-0 overflow-y-auto">
+              <div className="p-6 flex flex-col gap-6 h-full">
+                {/* Question Text */}
+                <div className="flex-shrink-0 p-6 bg-gradient-to-br from-background/80 to-muted/40 rounded-xl border border-brand/15">
+                  <div className="prose prose-lg max-w-none">
+                    <p className="text-foreground leading-relaxed text-lg font-medium">
+                      {currentQuestion.text}
+                    </p>
                   </div>
                 </div>
-              )}
+                
+                {/* Answer Section for Typed Questions */}
+                {currentQuestion.type === 'typed' && (
+                  <div className="flex-shrink-0">
+                    <div className="bg-gradient-to-br from-background/60 to-muted/30 rounded-xl border border-brand/10 p-4">
+                      <h3 className="text-sm font-semibold text-foreground mb-3">Your Answer</h3>
+                      <Textarea
+                        placeholder="Type your detailed answer here..."
+                        value={typedAnswer}
+                        onChange={(e) => setTypedAnswer(e.target.value)}
+                        className="min-h-32 max-h-48 resize-none text-base bg-background/80 border-brand/20 focus:border-brand/40 focus:ring-brand/20"
+                        disabled={isNarrating}
+                      />
+                      <div className="flex justify-between items-center text-sm text-muted-foreground mt-2">
+                        <span>{typedAnswer.length} characters</span>
+                        <span>{typedAnswer.split(/\s+/).filter(word => word.length > 0).length} words</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </Card>
           
-          {/* Bottom Action Buttons */}
+          {/* Fixed Bottom Action Buttons */}
           <div className="flex-shrink-0 flex items-center gap-4 p-4 bg-gradient-to-r from-card/90 to-muted/50 border border-brand/15 rounded-xl shadow-lg">
             <Button
               variant="outline"
@@ -516,9 +487,9 @@ export default function InterviewInterface() {
           </div>
 
           {/* Video Feed */}
-          <div className="flex-1">
-            <Card className="h-full overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30">
-              <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15">
+          <div className="flex-1 min-h-0">
+            <Card className="h-full overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30 flex flex-col">
+              <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground">Video Feed</h3>
                   <Badge variant="outline" className="bg-gradient-to-r from-green-500/20 to-green-400/15 border-green-500/40 text-green-700 text-xs">
@@ -527,8 +498,8 @@ export default function InterviewInterface() {
                   </Badge>
                 </div>
               </div>
-              <div className="p-3 flex-1 flex flex-col">
-                <div className="h-full min-h-0 rounded-lg overflow-hidden">
+              <div className="flex-1 p-3 min-h-0">
+                <div className="h-full rounded-lg overflow-hidden">
                   <CameraFeed 
                     isActive={true} 
                     candidateName={interviewData.candidateName}
@@ -542,6 +513,50 @@ export default function InterviewInterface() {
                     timerActive={timerActive}
                   />
                 </div>
+              </div>
+              
+              {/* Position and Recording Status Below Video */}
+              <div className="px-3 pb-3 flex-shrink-0 space-y-3">
+                {/* Position Info */}
+                <div className="bg-gradient-to-r from-background/80 to-muted/60 rounded-lg p-3 border border-brand/10">
+                  <div className="flex items-center space-x-2">
+                    <Briefcase className="w-4 h-4 text-brand flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-medium text-muted-foreground">Position</p>
+                      <p className="text-sm font-semibold text-foreground truncate">{interviewData.position}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Recording Status for Vocal Questions */}
+                {currentQuestion.type === 'vocal' && (
+                  <div className="bg-gradient-to-r from-background/80 to-muted/60 rounded-lg p-3 border border-brand/10">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-medium text-muted-foreground">Recording Status</p>
+                        <Badge className="bg-green-500/90 text-white text-xs">
+                          <Mic className="w-2 h-2 mr-1" />
+                          Vocal
+                        </Badge>
+                      </div>
+                      <div className="h-4">
+                        <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
+                      </div>
+                      <div className="text-center">
+                        {isRecording ? (
+                          <div className="flex items-center justify-center space-x-2">
+                            <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                            <span className="text-xs font-medium text-red-500">Recording...</span>
+                          </div>
+                        ) : timerActive ? (
+                          <span className="text-xs text-muted-foreground">Ready to record</span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Waiting for narration</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
           </div>
