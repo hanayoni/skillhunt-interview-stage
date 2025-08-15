@@ -479,8 +479,9 @@ export default function InterviewInterface() {
               </div>
             </div>
             
-            <div className="flex-1 p-6 flex flex-col min-h-0">
-              <div className="flex-1 p-6 bg-gradient-to-br from-background/80 to-muted/40 rounded-xl border border-brand/15 mb-6 overflow-y-auto">
+            <div className="flex-1 p-6 flex flex-col min-h-0 gap-6">
+              {/* Question Text */}
+              <div className="flex-1 p-6 bg-gradient-to-br from-background/80 to-muted/40 rounded-xl border border-brand/15 overflow-y-auto">
                 <div className="prose prose-lg max-w-none">
                   <p className="text-foreground leading-relaxed text-lg font-medium">
                     {currentQuestion.text}
@@ -488,9 +489,9 @@ export default function InterviewInterface() {
                 </div>
               </div>
               
-              {/* Answer Section */}
+              {/* Answer Section for Typed Questions */}
               {currentQuestion.type === 'typed' && (
-                <div className="flex-shrink-0 mb-6">
+                <div className="flex-shrink-0">
                   <div className="bg-gradient-to-br from-background/60 to-muted/30 rounded-xl border border-brand/10 p-4">
                     <h3 className="text-sm font-semibold text-foreground mb-3">Your Answer</h3>
                     <Textarea
@@ -508,12 +509,13 @@ export default function InterviewInterface() {
                 </div>
               )}
               
-              <div className="flex items-center gap-4">
+              {/* Action Buttons */}
+              <div className="flex-shrink-0 flex items-center gap-4">
                 <Button
                   variant="outline"
                   onClick={() => speakQuestion(currentQuestion.text)}
                   disabled={isNarrating || timerActive}
-                  className="flex-shrink-0 h-11 bg-gradient-to-r from-background/90 to-muted/60 border-brand/40 hover:border-brand/60 hover:bg-gradient-to-r hover:from-brand/5 hover:to-brand-light/5"
+                  className="h-11 px-6 bg-gradient-to-r from-background/90 to-muted/60 border-brand/40 hover:border-brand/60 hover:bg-gradient-to-r hover:from-brand/5 hover:to-brand-light/5"
                 >
                   <Volume2 className="w-4 h-4 mr-2" />
                   {isNarrating ? 'Speaking Question...' : 'Repeat Question'}
@@ -532,11 +534,12 @@ export default function InterviewInterface() {
           </Card>
         </div>
 
-        {/* Bottom Section - Video Feed (Bottom Left) */}
-        <div className="flex-shrink-0 flex justify-between items-end gap-6">
-          <div className="w-80 h-60">
-            <Card className="h-full p-0 overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30">
-              <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15 flex-shrink-0">
+        {/* Bottom Section - Video Feed and Status */}
+        <div className="flex-shrink-0 flex items-end gap-6">
+          {/* Video Feed - Bottom Left */}
+          <div className="w-80">
+            <Card className="overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30">
+              <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground">Video Feed</h3>
                   <Badge variant="outline" className="bg-gradient-to-r from-green-500/20 to-green-400/15 border-green-500/40 text-green-700 text-xs">
@@ -545,8 +548,8 @@ export default function InterviewInterface() {
                   </Badge>
                 </div>
               </div>
-              <div className="flex-1 p-2">
-                <div className="h-full w-full">
+              <div className="p-2">
+                <div className="h-48 w-full">
                   <CameraFeed 
                     isActive={true} 
                     candidateName={interviewData.candidateName}
@@ -564,18 +567,22 @@ export default function InterviewInterface() {
             </Card>
           </div>
           
-          {/* Status Messages */}
-          <div className="flex-1 text-right space-y-2">
+          {/* Status Messages - Bottom Right */}
+          <div className="flex-1 flex flex-col items-end justify-end space-y-2">
             {isNarrating && (
-              <p className="text-sm text-muted-foreground animate-pulse font-medium">
-                Please wait for question to finish...
-              </p>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground animate-pulse font-medium">
+                  Please wait for question to finish...
+                </p>
+              </div>
             )}
             
             {timerActive && currentQuestion.type === 'vocal' && (
-              <p className="text-sm text-green-600 animate-bounce-subtle font-medium">
-                Recording automatically started - speak your answer now
-              </p>
+              <div className="text-right">
+                <p className="text-sm text-green-600 animate-bounce-subtle font-medium">
+                  Recording automatically started - speak your answer now
+                </p>
+              </div>
             )}
             
             {currentQuestion.type === 'vocal' && isRecording && (
