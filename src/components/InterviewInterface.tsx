@@ -157,25 +157,18 @@ const CameraFeed = ({
         </div>
       </div>
 
-      {/* Answer Overlay - Bottom Right, More Transparent */}
-      <div className="absolute bottom-4 right-4 w-72">
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-white/10">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-white font-medium text-sm">Your Answer</h3>
-            {currentQuestion.type === 'vocal' ? (
+      {/* Recording Status Overlay - Bottom Right */}
+      {currentQuestion.type === 'vocal' && (
+        <div className="absolute bottom-4 right-4 w-64">
+          <div className="bg-black/60 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-white/10">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-white font-medium text-sm">Recording Status</h3>
               <Badge className="bg-green-500/80 text-white text-xs">
                 <Mic className="w-2 h-2 mr-1" />
                 Vocal
               </Badge>
-            ) : (
-              <Badge className="bg-blue-500/80 text-white text-xs">
-                <Type className="w-2 h-2 mr-1" />
-                Typed
-              </Badge>
-            )}
-          </div>
-          
-          {currentQuestion.type === 'vocal' ? (
+            </div>
+            
             <div className="space-y-2">
               <div className="h-6">
                 <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
@@ -193,23 +186,9 @@ const CameraFeed = ({
                 )}
               </div>
             </div>
-          ) : (
-            <div className="space-y-2">
-              <Textarea
-                placeholder="Type your answer here..."
-                value={typedAnswer}
-                onChange={(e) => setTypedAnswer(e.target.value)}
-                className="h-16 resize-none text-xs bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/40 focus:ring-white/20"
-                disabled={isNarrating}
-              />
-              <div className="flex justify-between items-center text-xs text-white/60">
-                <span>{typedAnswer.length} chars</span>
-                <span>{typedAnswer.split(/\s+/).filter(word => word.length > 0).length} words</span>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Decorative Border */}
       <div className="absolute inset-0 rounded-xl border-2 border-brand/20 pointer-events-none" />
@@ -548,8 +527,8 @@ export default function InterviewInterface() {
                   </Badge>
                 </div>
               </div>
-              <div className="p-2 h-full">
-                <div className="h-full w-full">
+              <div className="p-3 flex-1 flex flex-col">
+                <div className="h-full min-h-0 rounded-lg overflow-hidden">
                   <CameraFeed 
                     isActive={true} 
                     candidateName={interviewData.candidateName}
