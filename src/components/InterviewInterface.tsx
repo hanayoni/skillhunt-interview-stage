@@ -416,47 +416,10 @@ export default function InterviewInterface() {
       </div>
 
       {/* Main Content - New Layout */}
-      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 flex flex-col gap-6 min-h-0">
-        {/* Top Section - Timer */}
-        <div className="flex-shrink-0">
-          <div className={cn(
-            "bg-gradient-to-br from-card/80 to-muted/40 border border-brand/20 rounded-xl p-4 shadow-lg transition-all duration-300",
-            timeLeft <= 30 && timerActive && "border-destructive/60 bg-gradient-to-br from-destructive/10 to-destructive/5 animate-timer-pulse"
-          )}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <Clock className={cn(
-                  "w-5 h-5",
-                  timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
-                )} />
-                <span className="text-base font-semibold text-foreground">Time Remaining</span>
-              </div>
-              <div className={cn(
-                "text-2xl font-bold tabular-nums",
-                timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
-              )}>
-                {formatTime(timeLeft)}
-              </div>
-            </div>
-            <div className="relative">
-              <div className="h-3 bg-gradient-to-r from-muted/60 to-muted/40 rounded-full overflow-hidden">
-                <div 
-                  className={cn(
-                    "h-full transition-all duration-1000 ease-out rounded-full",
-                    timeLeft <= 30 && timerActive 
-                      ? "bg-gradient-to-r from-destructive via-destructive/80 to-destructive animate-pulse" 
-                      : "bg-gradient-to-r from-brand via-brand-light to-brand"
-                  )}
-                  style={{ width: `${((currentQuestion.timeLimit - timeLeft) / currentQuestion.timeLimit) * 100}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Middle Section - Question (Prominent Display) */}
-        <div className="flex-1 min-h-0">
-          <Card className="h-full shadow-xl border border-brand/15 bg-gradient-to-br from-card/95 to-muted/50 backdrop-blur-sm flex flex-col">
+      <div className="flex-1 max-w-7xl mx-auto w-full px-6 py-6 flex gap-6 min-h-0">
+        {/* Left Side - Question (Prominent Display) */}
+        <div className="flex-1 min-h-0 flex flex-col gap-6">
+          <Card className="flex-1 shadow-xl border border-brand/15 bg-gradient-to-br from-card/95 to-muted/50 backdrop-blur-sm flex flex-col">
             <div className="px-6 py-4 bg-gradient-to-r from-brand/15 to-brand-light/10 border-b border-brand/20 flex-shrink-0">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-foreground">Current Question</h2>
@@ -508,37 +471,74 @@ export default function InterviewInterface() {
                   </div>
                 </div>
               )}
-              
-              {/* Action Buttons */}
-              <div className="flex-shrink-0 flex items-center gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => speakQuestion(currentQuestion.text)}
-                  disabled={isNarrating || timerActive}
-                  className="h-11 px-6 bg-gradient-to-r from-background/90 to-muted/60 border-brand/40 hover:border-brand/60 hover:bg-gradient-to-r hover:from-brand/5 hover:to-brand-light/5"
-                >
-                  <Volume2 className="w-4 h-4 mr-2" />
-                  {isNarrating ? 'Speaking Question...' : 'Repeat Question'}
-                </Button>
-                
-                <Button
-                  onClick={handleNextQuestion}
-                  disabled={!canProceed() || currentQuestionIndex >= totalQuestions - 1}
-                  className="flex-1 h-11 text-base font-bold bg-gradient-to-r from-brand via-brand-light to-brand hover:from-brand-dark hover:via-brand hover:to-brand-light shadow-lg hover:shadow-xl transition-all duration-300 border border-brand/20"
-                >
-                  <SkipForward className="w-4 h-4 mr-2" />
-                  {currentQuestionIndex >= totalQuestions - 1 ? 'Complete Interview' : 'Next Question'}
-                </Button>
-              </div>
             </div>
           </Card>
+          
+          {/* Bottom Action Buttons */}
+          <div className="flex-shrink-0 flex items-center gap-4 p-4 bg-gradient-to-r from-card/90 to-muted/50 border border-brand/15 rounded-xl shadow-lg">
+            <Button
+              variant="outline"
+              onClick={() => speakQuestion(currentQuestion.text)}
+              disabled={isNarrating || timerActive}
+              className="h-11 px-6 bg-gradient-to-r from-background/90 to-muted/60 border-brand/40 hover:border-brand/60 hover:bg-gradient-to-r hover:from-brand/5 hover:to-brand-light/5"
+            >
+              <Volume2 className="w-4 h-4 mr-2" />
+              {isNarrating ? 'Speaking Question...' : 'Repeat Question'}
+            </Button>
+            
+            <Button
+              onClick={handleNextQuestion}
+              disabled={!canProceed() || currentQuestionIndex >= totalQuestions - 1}
+              className="flex-1 h-11 text-base font-bold bg-gradient-to-r from-brand via-brand-light to-brand hover:from-brand-dark hover:via-brand hover:to-brand-light shadow-lg hover:shadow-xl transition-all duration-300 border border-brand/20"
+            >
+              <SkipForward className="w-4 h-4 mr-2" />
+              {currentQuestionIndex >= totalQuestions - 1 ? 'Complete Interview' : 'Next Question'}
+            </Button>
+          </div>
         </div>
 
-        {/* Bottom Section - Video Feed and Status */}
-        <div className="flex-shrink-0 flex items-end gap-6">
-          {/* Video Feed - Bottom Left */}
-          <div className="w-80">
-            <Card className="overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30">
+        {/* Right Side - Timer and Video Feed */}
+        <div className="w-80 flex flex-col gap-6">
+          {/* Timer Section */}
+          <div className="flex-shrink-0">
+            <div className={cn(
+              "bg-gradient-to-br from-card/80 to-muted/40 border border-brand/20 rounded-xl p-4 shadow-lg transition-all duration-300",
+              timeLeft <= 30 && timerActive && "border-destructive/60 bg-gradient-to-br from-destructive/10 to-destructive/5 animate-timer-pulse"
+            )}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <Clock className={cn(
+                    "w-5 h-5",
+                    timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
+                  )} />
+                  <span className="text-base font-semibold text-foreground">Time Left</span>
+                </div>
+                <div className={cn(
+                  "text-2xl font-bold tabular-nums",
+                  timeLeft <= 30 && timerActive ? "text-destructive" : "text-brand"
+                )}>
+                  {formatTime(timeLeft)}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="h-3 bg-gradient-to-r from-muted/60 to-muted/40 rounded-full overflow-hidden">
+                  <div 
+                    className={cn(
+                      "h-full transition-all duration-1000 ease-out rounded-full",
+                      timeLeft <= 30 && timerActive 
+                        ? "bg-gradient-to-r from-destructive via-destructive/80 to-destructive animate-pulse" 
+                        : "bg-gradient-to-r from-brand via-brand-light to-brand"
+                    )}
+                    style={{ width: `${((currentQuestion.timeLimit - timeLeft) / currentQuestion.timeLimit) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Video Feed */}
+          <div className="flex-1">
+            <Card className="h-full overflow-hidden shadow-xl border border-brand/10 bg-gradient-to-br from-card/90 to-muted/30">
               <div className="px-3 py-2 bg-gradient-to-r from-brand/10 to-brand-light/8 border-b border-brand/15">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground">Video Feed</h3>
@@ -548,8 +548,8 @@ export default function InterviewInterface() {
                   </Badge>
                 </div>
               </div>
-              <div className="p-2">
-                <div className="h-48 w-full">
+              <div className="p-2 h-full">
+                <div className="h-full w-full">
                   <CameraFeed 
                     isActive={true} 
                     candidateName={interviewData.candidateName}
@@ -567,10 +567,10 @@ export default function InterviewInterface() {
             </Card>
           </div>
           
-          {/* Status Messages - Bottom Right */}
-          <div className="flex-1 flex flex-col items-end justify-end space-y-2">
+          {/* Status Messages */}
+          <div className="flex-shrink-0 space-y-2">
             {isNarrating && (
-              <div className="text-right">
+              <div className="text-center">
                 <p className="text-sm text-muted-foreground animate-pulse font-medium">
                   Please wait for question to finish...
                 </p>
@@ -578,7 +578,7 @@ export default function InterviewInterface() {
             )}
             
             {timerActive && currentQuestion.type === 'vocal' && (
-              <div className="text-right">
+              <div className="text-center">
                 <p className="text-sm text-green-600 animate-bounce-subtle font-medium">
                   Recording automatically started - speak your answer now
                 </p>
@@ -586,13 +586,14 @@ export default function InterviewInterface() {
             )}
             
             {currentQuestion.type === 'vocal' && isRecording && (
-              <div className="flex items-center justify-end space-x-2">
+              <div className="flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-sm font-medium text-red-500">Recording in progress...</span>
               </div>
             )}
           </div>
         </div>
+
       </div>
     </div>
   );
