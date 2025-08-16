@@ -137,6 +137,24 @@ const CameraFeed = ({
         </div>
       </div>
 
+      {/* Recording Description Overlay */}
+      {currentQuestion.type === 'vocal' && (
+        <div className="absolute bottom-4 left-4">
+          <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-white/10 max-w-xs">
+            {isRecording ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-xs text-white font-medium">Recording in progress...</span>
+              </div>
+            ) : timerActive ? (
+              <span className="text-xs text-white font-medium">Recording automatically started - speak your answer now</span>
+            ) : (
+              <span className="text-xs text-white/80 font-medium">Waiting for narration</span>
+            )}
+          </div>
+        </div>
+      )}
+
 
       {/* Decorative Border */}
       <div className="absolute inset-0 rounded-xl border-2 border-brand/20 pointer-events-none" />
@@ -428,7 +446,7 @@ export default function InterviewInterface() {
         </div>
 
         {/* Right Side - Timer and Video Feed */}
-        <div className="w-80 flex flex-col gap-6">
+        <div className="w-96 flex flex-col gap-6">
           {/* Timer Section */}
           <div className="flex-shrink-0">
             <div className={cn(
@@ -494,77 +512,7 @@ export default function InterviewInterface() {
                   />
                 </div>
               </div>
-              
-              {/* Position and Recording Status Below Video */}
-              <div className="px-3 pb-3 flex-shrink-0 space-y-3">
-                {/* Position Info */}
-                <div className="bg-gradient-to-r from-background/80 to-muted/60 rounded-lg p-3 border border-brand/10">
-                  <div className="flex items-center space-x-2">
-                    <Briefcase className="w-4 h-4 text-brand flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-muted-foreground">Position</p>
-                      <p className="text-sm font-semibold text-foreground truncate">{interviewData.position}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Recording Status for Vocal Questions */}
-                {currentQuestion.type === 'vocal' && (
-                  <div className="bg-gradient-to-r from-background/80 to-muted/60 rounded-lg p-3 border border-brand/10">
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-medium text-muted-foreground">Recording Status</p>
-                        <Badge className="bg-green-500/90 text-white text-xs">
-                          <Mic className="w-2 h-2 mr-1" />
-                          Vocal
-                        </Badge>
-                      </div>
-                      <div className="h-4">
-                        <AudioVisualizer isRecording={isRecording} audioLevel={audioLevel} />
-                      </div>
-                      <div className="text-center">
-                        {isRecording ? (
-                          <div className="flex items-center justify-center space-x-2">
-                            <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-                            <span className="text-xs font-medium text-red-500">Recording...</span>
-                          </div>
-                        ) : timerActive ? (
-                          <span className="text-xs text-muted-foreground">Ready to record</span>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">Waiting for narration</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
             </Card>
-          </div>
-          
-          {/* Status Messages */}
-          <div className="flex-shrink-0 space-y-2">
-            {isNarrating && (
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground animate-pulse font-medium">
-                  Please wait for question to finish...
-                </p>
-              </div>
-            )}
-            
-            {timerActive && currentQuestion.type === 'vocal' && (
-              <div className="text-center">
-                <p className="text-sm text-green-600 animate-bounce-subtle font-medium">
-                  Recording automatically started - speak your answer now
-                </p>
-              </div>
-            )}
-            
-            {currentQuestion.type === 'vocal' && isRecording && (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-red-500">Recording in progress...</span>
-              </div>
-            )}
           </div>
         </div>
 
