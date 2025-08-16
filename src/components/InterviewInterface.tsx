@@ -129,28 +129,30 @@ const CameraFeed = ({
         </div>
       )}
       
-      {/* Recording Status Overlay */}
-      <div className="absolute top-4 right-4">
-        <div className="flex items-center space-x-2 bg-black/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-lg border border-white/10">
-          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-          <span className="text-xs text-white font-medium">REC</span>
-        </div>
-      </div>
-
-      {/* Recording Description Overlay */}
+      {/* Combined Recording Status and Instructions Overlay */}
       {currentQuestion.type === 'vocal' && (
         <div className="absolute bottom-4 left-4">
-          <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-white/10 max-w-xs">
-            {isRecording ? (
+          <div className="bg-black/80 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/10 max-w-xs">
+            <div className="space-y-2">
+              {/* Recording indicator */}
               <div className="flex items-center space-x-2">
-                <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-                <span className="text-xs text-white font-medium">Recording in progress...</span>
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-xs text-white font-medium">REC</span>
               </div>
-            ) : timerActive ? (
-              <span className="text-xs text-white font-medium">Recording automatically started - speak your answer now</span>
-            ) : (
-              <span className="text-xs text-white/80 font-medium">Waiting for narration</span>
-            )}
+              
+              {/* Status message */}
+              <div className="text-xs text-white">
+                {isNarrating ? (
+                  <span className="font-medium">Listening to question...</span>
+                ) : isRecording ? (
+                  <span className="font-medium text-green-300">Recording in progress - speak your answer</span>
+                ) : timerActive ? (
+                  <span className="font-medium text-yellow-300">Ready - start speaking your answer now</span>
+                ) : (
+                  <span className="text-white/80">Waiting for question...</span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
